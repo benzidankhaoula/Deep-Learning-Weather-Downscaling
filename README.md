@@ -124,8 +124,6 @@ The `results/` directory contains the experimental screenshots and comparison ou
 These images document the training and evaluation logs rather than serving as spatial prediction visualizations.
 
 ## Repository Structure
-
-```text
 Deep-Learning-Weather-Downscaling/
 │
 ├── results/
@@ -148,7 +146,6 @@ Deep-Learning-Weather-Downscaling/
 ├── requirements.txt
 ├── .gitignore
 └── README.md
-
 
 ## Technologies
 
