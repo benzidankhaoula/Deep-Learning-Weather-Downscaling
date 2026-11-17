@@ -1,121 +1,132 @@
 # Deep Learning-Based Weather Downscaling
 
-### Comparative Study of Deep Learning Models and an Attention-Enhanced U-Net Architecture
+### Comparative Study of Deep Learning Models with a Proposed Attention-Enhanced U-Net
 
 ## Overview
 
-This project investigates deep learning approaches for meteorological downscaling using ERA5 reanalysis data. The objective is to transform low-resolution 2-meter temperature fields into higher-resolution representations through deep learning.
+This project explores deep learning approaches for weather data downscaling, focusing on 2-meter temperature (T2M).
 
-Five teacher-provided baseline architectures were implemented and evaluated, followed by the development of a proposed U-Net architecture designed to improve downscaling performance.
+The work was conducted in two stages:
+
+1. **Baseline experimentation:** Running and evaluating teacher-provided deep learning implementations, including CNN, LSTM, Transformer, GAN, and Diffusion models.
+2. **Proposed model development:** Designing and implementing an attention-enhanced U-Net architecture to improve the downscaling performance of the baseline approaches.
+
+The main objective was to investigate different neural network architectures and develop a model capable of achieving better reported performance than the baseline models.
 
 ## Project Objectives
 
-- Reproduce and evaluate existing deep learning architectures.
-- Develop a proposed U-Net model for weather downscaling.
-- Compare model performance using RMSE and PSNR.
-- Investigate the effectiveness of spatial feature extraction and attention mechanisms.
+- Reproduce and experiment with existing deep learning architectures.
+- Develop a U-Net-based weather downscaling model.
+- Compare model performance using Root Mean Square Error (RMSE).
+- Explore attention mechanisms and encoder-decoder architectures.
+- Analyze the strengths and limitations of different deep learning approaches.
 
-## Dataset
+## Dataset and Preprocessing
 
-**Data source:** ERA5 Reanalysis (ECMWF)
+The project is designed around ERA5 reanalysis temperature data from the European Centre for Medium-Range Weather Forecasts (ECMWF).
 
-**Target variable:** 2-meter temperature (t2m)
+**Target variable:** 2-meter temperature (T2M).
+
+The accompanying data guide describes the following intended configuration:
 
 | Parameter | Description |
 |---|---|
-| Input resolution | 1° × 1° |
-| Output resolution | 0.25° × 0.25° |
-| Input dimensions | 20 × 35 |
-| Output dimensions | 80 × 140 |
-| Upscaling factor | 4× per dimension |
-| Training samples | 11,688 |
-| Validation samples | 2,920 |
+| Low-resolution input | 1.0° × 1.0° |
+| High-resolution target | 0.25° × 0.25° |
+| Temporal resolution | 6 hours |
+| Geographic region | China |
+| Intended period | 2010–2020 |
+| Upscaling factor | 4× per spatial dimension |
 
-Data normalization was performed using training-set statistics to avoid data leakage.
+The U-Net implementation loads preprocessed low-resolution and high-resolution arrays from the `processed_era5_t2m_downscaling` directory.
+
+**Note:** The dataset files are not included in this repository. Refer to `DATA_GUIDE.md` for the data preparation instructions. The actual data provenance and preprocessing configuration used for each reported experiment should be verified before treating the results as a fully reproducible ERA5 benchmark.
 
 ## Models
 
 ### 1. Baseline Models
 
-The following implementations were provided as part of the course experiments:
+The following implementations were provided as part of the course assignment and used for comparative experiments:
 
-- Convolutional Neural Network (CNN)
-- Long Short-Term Memory (LSTM)
-- Transformer
-- Generative Adversarial Network (GAN)
-- Diffusion Model
+| Model | Architecture |
+|---|---|
+| CNN | Convolutional Neural Network |
+| LSTM | Long Short-Term Memory |
+| Transformer | Attention-based neural network |
+| GAN | Generative Adversarial Network |
+| Diffusion | Diffusion-based generative model |
 
 ### 2. Proposed Model: Attention-Enhanced U-Net
 
-An attention-enhanced U-Net architecture was developed as the proposed model.
+The proposed model is a U-Net-based architecture designed for spatial temperature downscaling.
 
-**Main architectural components:**
+Its main components include:
 
-- Convolutional encoder-decoder architecture
-- Multi-level feature extraction
-- Attention gate at the bottleneck
-- Skip connections
-- Transposed convolution for decoder upsampling
-- PixelShuffle-based ×4 upsampling
-- Batch Normalization and ReLU activation
+- **Encoder:** Three convolutional feature extraction stages with 32, 64, and 128 channels.
+- **Bottleneck:** A convolutional block with 256 channels.
+- **Attention mechanism:** A lightweight attention gate applied to bottleneck features.
+- **Skip connections:** Combine encoder and decoder features to preserve spatial information.
+- **Decoder:** Transposed convolution and convolutional blocks.
+- **Upsampling:** Two PixelShuffle operations, each providing 2× upsampling.
+- **Output layer:** A final convolution producing a single-channel temperature prediction.
 
-The model was trained using PyTorch with the Adam optimizer and Mean Squared Error (MSE) loss.
+### Training Configuration
+
+| Parameter | Configuration |
+|---|---|
+| Framework | PyTorch |
+| Optimizer | Adam |
+| Loss function | Mean Squared Error (MSE) |
+| Learning rate | 0.0001 |
+| Batch size | 8 |
+| Training epochs | 50 |
+| Hardware | CUDA-enabled GPU |
 
 ## Experimental Results
 
-The models were evaluated using Root Mean Square Error (RMSE) and Peak Signal-to-Noise Ratio (PSNR).
+The following RMSE values were reported in the experiment logs and model comparison output.
 
-### Model Comparison
+### Baseline and Proposed Model Comparison
 
-| Model | RMSE | PSNR (dB) |
-|---|---:|---:|
-| **U-Net (Proposed)** | **0.0500** | **39.03** |
-| CNN | 0.0553 | 38.02 |
-| GAN | ~0.0800 | ~31–33 |
-| Diffusion | 0.1400 | 29.08 |
-| LSTM | 0.2054 | 26.24 |
-| Transformer | 1.4115 | 9.00 |
+| Model | Reported RMSE |
+|---|---:|
+| **U-Net (Proposed)** | **0.0500** |
+| CNN | 0.0553 |
+| Diffusion | 0.1400 |
+| LSTM | 0.2054 |
+| Transformer | 1.4115 |
+| GAN | Not reported |
+
+**Important:** These are preliminary reported results, not yet a fully reproducible benchmark. The current evaluation script contains hardcoded values for several models and needs further work before independently reproducing the comparison.
 
 ### Key Finding
 
-The proposed U-Net achieved the best reported performance, with an RMSE of 0.0500.
+The proposed U-Net achieved the lowest reported RMSE of **0.0500**.
 
-Compared with the CNN baseline (RMSE = 0.0553), the proposed model achieved an approximately 9.6% reduction in RMSE.
+Compared with the teacher-provided CNN baseline (0.0553), this represents an approximately 9.6% reduction in reported RMSE.
 
-### Results and Visualizations
+Further validation under a consistent evaluation procedure is needed to confirm the comparison.
 
-The experimental visualizations are available in the [`results/`](results/) directory.
+## Results and Experimental Logs
 
-- [Model Comparison](results/model_comparison.png)
-- [CNN Results](results/cnn_results2.png)
-- [U-Net Results](results/unet_results.png)
-- [LSTM Results](results/lstm_results.png)
-- [Transformer Results](results/transformer_results.png)
-- [GAN Results](results/gan_results.png)
-- [Diffusion Results](results/diffusion_results.png)
+The `results/` directory contains the experimental screenshots and comparison output.
 
-## Technologies
+| Experiment | Results |
+|---|---|
+| Model comparison | [View results](results/model_comparison.png) |
+| CNN | [View results](results/cnn_results2.png) |
+| U-Net | [View results](results/unet_results.png) |
+| LSTM | [View results](results/lstm_results.png) |
+| Transformer | [View results](results/transformer_results.png) |
+| GAN | [View results](results/gan_results.png) |
+| Diffusion | [View results](results/diffusion_results.png) |
 
-- Python
-- PyTorch
-- NumPy
-- Matplotlib
-- ERA5 Reanalysis Data
-- CUDA / GPU Computing
+These images document the training and evaluation logs rather than serving as spatial prediction visualizations.
 
 ## Repository Structure
 
 ```text
 Deep-Learning-Weather-Downscaling/
-│
-├── baseline_models/
-│   └── (planned organization)
-│
-├── proposed_model/
-│   └── (planned organization)
-│
-├── evaluation/
-│   └── (planned organization)
 │
 ├── results/
 │   ├── model_comparison.png
@@ -132,25 +143,41 @@ Deep-Learning-Weather-Downscaling/
 ├── downscaling_gan.py
 ├── downscaling_diffusion.py
 ├── unet_downscaling.py
+│
+├── evaluate_all_models.py
 ├── DATA_GUIDE.md
+├── requirements.txt
+├── .gitignore
 └── README.md
 ```
 
+## Technologies
+
+- Python
+- PyTorch
+- NumPy
+- CUDA
+- Matplotlib
+- ERA5 Reanalysis Data
+
 ## Limitations and Future Work
 
-Potential future improvements include:
+Potential improvements include:
 
-- Hyperparameter optimization.
-- Ensemble U-Net architectures.
-- Multi-variable meteorological downscaling.
-- Physics-informed loss functions.
-- Improved uncertainty quantification.
-- Evaluation across additional geographical regions.
+- Developing a reproducible evaluation pipeline for all architectures.
+- Ensuring identical validation data and evaluation procedures across models.
+- Investigating different loss functions and optimization strategies.
+- Improving attention mechanisms.
+- Generating and comparing spatial temperature prediction maps.
+- Evaluating model generalization across different geographical regions.
+- Exploring uncertainty estimation and physics-informed approaches.
 
 ## Acknowledgements
 
-The baseline model implementations were provided as part of the course experiments. The proposed U-Net architecture and comparative experimental study were developed as the project's main contribution.
+The baseline model implementations were provided by the course instructor as part of the practical assignment.
+
+The proposed U-Net implementation, training experiments, and comparative analysis were conducted as part of the project work.
 
 **Project:** Comprehensive Practice in Smart Meteorology  
 **Field:** Artificial Intelligence  
-**Date:** June 2026
+**Focus:** Deep Learning and Weather Downscaling
