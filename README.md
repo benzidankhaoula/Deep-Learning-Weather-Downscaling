@@ -143,13 +143,11 @@ Deep-Learning-Weather-Downscaling/
 ├── downscaling_gan.py
 ├── downscaling_diffusion.py
 ├── unet_downscaling.py
-│
-├── evaluate_all_models.py
+├── download_data.py
 ├── DATA_GUIDE.md
 ├── requirements.txt
 ├── .gitignore
 └── README.md
-```
 
 ## Technologies
 
