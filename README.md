@@ -6,18 +6,18 @@
 
 This project explores deep learning approaches for weather data downscaling, focusing on 2-meter temperature (T2M).
 
-The work was conducted in two stages:
+The project was conducted in two main stages:
 
-1. **Baseline experimentation:** Running and evaluating teacher-provided deep learning implementations, including CNN, LSTM, Transformer, GAN, and Diffusion models.
-2. **Proposed model development:** Designing and implementing an attention-enhanced U-Net architecture to improve the downscaling performance of the baseline approaches.
+1. **Baseline experimentation:** Running and studying five deep learning architectures provided as part of the course assignment: CNN, LSTM, Transformer, GAN, and Diffusion.
+2. **Proposed model development:** Designing and implementing an attention-enhanced U-Net architecture to investigate improvements in spatial downscaling performance.
 
-The main objective was to investigate different neural network architectures and develop a model capable of achieving better reported performance than the baseline models.
+The main objective was to compare different neural network architectures and develop a model capable of achieving better reported performance than the baseline approaches.
 
 ## Project Objectives
 
-- Reproduce and experiment with existing deep learning architectures.
-- Develop a U-Net-based weather downscaling model.
-- Compare model performance using Root Mean Square Error (RMSE).
+- Experiment with different deep learning architectures for weather downscaling.
+- Develop a U-Net-based temperature downscaling model.
+- Compare reported model performance using Root Mean Square Error (RMSE).
 - Explore attention mechanisms and encoder-decoder architectures.
 - Analyze the strengths and limitations of different deep learning approaches.
 
@@ -27,7 +27,7 @@ The project is designed around ERA5 reanalysis temperature data from the Europea
 
 **Target variable:** 2-meter temperature (T2M).
 
-The accompanying data guide describes the following intended configuration:
+The intended dataset configuration is described in `DATA_GUIDE.md`.
 
 | Parameter | Description |
 |---|---|
@@ -40,13 +40,13 @@ The accompanying data guide describes the following intended configuration:
 
 The U-Net implementation loads preprocessed low-resolution and high-resolution arrays from the `processed_era5_t2m_downscaling` directory.
 
-**Note:** The dataset files are not included in this repository. Refer to `DATA_GUIDE.md` for the data preparation instructions. The actual data provenance and preprocessing configuration used for each reported experiment should be verified before treating the results as a fully reproducible ERA5 benchmark.
+**Note:** The dataset files are not included in this repository. Refer to `DATA_GUIDE.md` for data preparation instructions. The exact data provenance and preprocessing configuration used in each experiment should be verified before interpreting the reported results as a reproducible ERA5 benchmark.
 
 ## Models
 
 ### 1. Baseline Models
 
-The following implementations were provided as part of the course assignment and used for comparative experiments:
+The following model implementations were provided as part of the course assignment and used for comparative experiments.
 
 | Model | Architecture |
 |---|---|
@@ -58,7 +58,7 @@ The following implementations were provided as part of the course assignment and
 
 ### 2. Proposed Model: Attention-Enhanced U-Net
 
-The proposed model is a U-Net-based architecture designed for spatial temperature downscaling.
+The proposed contribution is an attention-enhanced U-Net architecture designed for spatial temperature downscaling.
 
 Its main components include:
 
@@ -84,7 +84,7 @@ Its main components include:
 
 ## Experimental Results
 
-The following RMSE values were reported in the experiment logs and model comparison output.
+The following RMSE values were reported in the project's experimental results.
 
 ### Baseline and Proposed Model Comparison
 
@@ -97,21 +97,21 @@ The following RMSE values were reported in the experiment logs and model compari
 | Transformer | 1.4115 |
 | GAN | Not reported |
 
-**Important:** These are preliminary reported results, not yet a fully reproducible benchmark. The current evaluation script contains hardcoded values for several models and needs further work before independently reproducing the comparison.
+**Important:** These values represent preliminary experimental results. A complete, independently reproducible evaluation pipeline for all architectures has not yet been established. The results should therefore be interpreted with this limitation in mind.
 
 ### Key Finding
 
 The proposed U-Net achieved the lowest reported RMSE of **0.0500**.
 
-Compared with the teacher-provided CNN baseline (0.0553), this represents an approximately 9.6% reduction in reported RMSE.
+Compared with the teacher-provided CNN baseline (0.0553), this corresponds to an approximately **9.6% reduction in reported RMSE**.
 
-Further validation under a consistent evaluation procedure is needed to confirm the comparison.
+Further validation using consistent datasets, preprocessing, and evaluation procedures is necessary to confirm this performance difference.
 
-## Results and Experimental Logs
+## Experimental Results and Training Logs
 
-The `results/` directory contains the experimental screenshots and comparison output.
+The `results/` directory contains screenshots documenting the experimental outputs, training logs, and model comparison results.
 
-| Experiment | Results |
+| Experiment | Evidence |
 |---|---|
 | Model comparison | [View results](results/model_comparison.png) |
 | CNN | [View results](results/cnn_results2.png) |
@@ -121,9 +121,11 @@ The `results/` directory contains the experimental screenshots and comparison ou
 | GAN | [View results](results/gan_results.png) |
 | Diffusion | [View results](results/diffusion_results.png) |
 
-These images document the training and evaluation logs rather than serving as spatial prediction visualizations.
+**Note:** These screenshots document terminal-based experimental outputs and logs. They are not spatial temperature prediction maps.
 
 ## Repository Structure
+
+```text
 Deep-Learning-Weather-Downscaling/
 │
 ├── results/
@@ -146,6 +148,7 @@ Deep-Learning-Weather-Downscaling/
 ├── requirements.txt
 ├── .gitignore
 └── README.md
+```
 
 ## Technologies
 
@@ -158,12 +161,12 @@ Deep-Learning-Weather-Downscaling/
 
 ## Limitations and Future Work
 
-Potential improvements include:
+Potential improvements and future research directions include:
 
 - Developing a reproducible evaluation pipeline for all architectures.
-- Ensuring identical validation data and evaluation procedures across models.
-- Investigating different loss functions and optimization strategies.
-- Improving attention mechanisms.
+- Ensuring consistent validation datasets and evaluation procedures across models.
+- Investigating alternative loss functions and optimization strategies.
+- Improving attention mechanisms for spatial feature extraction.
 - Generating and comparing spatial temperature prediction maps.
 - Evaluating model generalization across different geographical regions.
 - Exploring uncertainty estimation and physics-informed approaches.
@@ -172,7 +175,7 @@ Potential improvements include:
 
 The baseline model implementations were provided by the course instructor as part of the practical assignment.
 
-The proposed U-Net implementation, training experiments, and comparative analysis were conducted as part of the project work.
+The proposed attention-enhanced U-Net implementation, training experiments, and comparative analysis were conducted as part of my project work.
 
 **Project:** Comprehensive Practice in Smart Meteorology  
 **Field:** Artificial Intelligence  
